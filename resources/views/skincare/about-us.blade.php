@@ -55,14 +55,15 @@
     <nav class="navbar">
         <a href="#">Skincare Store</a>
         <div>
-            <a href="home.blade.php">Home</a>
-            <a href="skincare.blade.php">Produk</a>
-            <a href="about-us.blade.php">Tentang Kami</a>
-            <a href="ingredients.blade.php">Kandungan Skincare</a>
+            <a href="{{ route("home") }}">Home</a>
+            <a href="{{ route("skincare") }}">Produk</a>
+            <a href="{{ route("about.us") }}">Tentang Kami</a>
+            <a href="{{ route("ingredients") }}">Kandungan Skincare</a>
         </div>
     </nav>
     
     <div class="container">
         <h2>Tentang Kami</h2>
-        <img class="about-image" src="serum vitamin c.jpg" alt="Tentang Kami">
-        <p>Skincare Store hadir untuk memberikan solusi perawatan kulit terbaik untuk semua jenis kulit. Kami percaya bahwa setiap orang berhak mendapatkan kulit yang sehat dan bercahaya.</
+        <p>Selamat datang di Lullaskin Store, tempat di mana perawatan kulit bukan hanya tentang kecantikan, tetapi juga tentang mencintai dan merawat diri sendiri. Kami percaya bahwa setiap kulit punya cerita unik dan pantas mendapatkan perhatian terbaik. Oleh karena itu, di Lullaskin Store, kami hadir dengan rangkaian produk yang dibuat dengan bahan alami, aman, dan teruji, yang dirancang khusus untuk memberikan manfaat maksimal tanpa khawatir akan bahan berbahaya.
+Kami memahami bahwa memilih produk skincare yang tepat bisa menjadi tantangan. Itu sebabnya kami di sini untuk memberikanmu referensi dan informasi yang jelas mengenai setiap produk, agar kamu bisa menemukan skincare yang cocok untuk kulitmu. Baik itu untuk kulit kering, berminyak, sensitif, atau kombinasi, kami punya solusi yang dirancang dengan formula lembut yang cocok untuk setiap kebutuhan kulit.
+        </p>

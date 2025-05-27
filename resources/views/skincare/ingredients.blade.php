@@ -58,10 +58,10 @@
     <nav class="navbar">
         <a href="">Skincare Store</a>
         <div>
-            <a href="home.blade.php">Home</a>
-            <a href="skincare.blade.php">Produk</a>
-            <a href="about-us.blade.php">Tentang Kami</a>
-            <a href="ingredients.blade.php">Kandungan Skincare</a>
+        <a href="{{ route("home") }}">Home</a>
+            <a href="{{ route("skincare") }}">Produk</a>
+            <a href="{{ route("about.us") }}">Tentang Kami</a>
+            <a href="{{ route("ingredients") }}">Kandungan Skincare</a>
         </div>
     </nav>
     

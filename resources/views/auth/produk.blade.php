@@ -85,11 +85,8 @@
         <div class="row">
             @foreach($products as $product)
             <div class="card">
-                <img src="../img/{{ $product->image }}" alt="{{ $product->name }}">
                 <h4>{{ $product->name }}</h4>
-                <p>Rp{{ number_format($product->price, 0, ',', '.') }}</p>
-                <a href="{{ route('produk.show', $product->id) }}" class="btn">Beli Sekarang</a>
-
+                <a href="#" class="btn">Edit</a>
             </div>
             @endforeach
         </div>
