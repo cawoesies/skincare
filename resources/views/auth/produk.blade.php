@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skincare Store</title>
+    <title>Halo Admin Cantik Produk Skincare</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,7 +40,7 @@
             gap: 20px;
             justify-content: center;
         }
-        .card {
+        .product-card {
             background: #fff5f8;
             padding: 15px;
             border: 1px solid #ff69b4;
@@ -49,9 +49,10 @@
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .card img {
+        .product-card img {
             max-width: 100%;
-            height: auto;
+            height: 120px;
+            object-fit: contain;
             border-radius: 10px;
         }
         .btn {
@@ -62,31 +63,77 @@
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin: 2px;
         }
-        h1, h5 {
+        .btn-outline-secondary {
+            background: transparent;
+            color: #6c757d;
+            border: 1px solid #6c757d;
+        }
+        .btn-outline-danger {
+            background: transparent;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        h1, h2, h4, h5 {
             color: #d63384;
+        }
+        .fw-bold {
+            font-weight: bold;
+        }
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+        .me-1 {
+            margin-right: 0.25rem;
+        }
+        @media (max-width: 768px) {
+            .product-card {
+                width: 45%;
+            }
+        }
+        @media (max-width: 480px) {
+            .product-card {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <a href="#">Skincare Store</a>
+        <a href="{{ route('landing.page') }}">Lullaskin Store</a>
         <div>
-            <a href="{{ route("home") }}">Home</a>
-            <a href="{{ route("skincare") }}">Produk</a>
-            <a href="{{ route("about.us") }}">Tentang Kami</a>
-            <a href="{{ route("ingredients") }}">Kandungan Skincare</a>
+            <a href="{{ route("admin") }}">Home</a>
+            <a href="{{ route("produk") }}">Produk</a>
+            <a href="{{ route("index") }}">Data Pesan</a>
         </div>
     </nav>
     
     <div class="container">
-        <h1 class="text-center">Selamat Datang di Skincare Store</h1>
-        <p class="text-center">Temukan produk skincare terbaik untuk kulit sehat dan bercahaya.</p>
+        <h2 class="fw-bold mb-4">Kelola Produk Skincare</h2>
+
+        <a href="{{ route('products.create') }}" class="btn mb-4">
+            + Tambah Produk Skincare
+        </a>
+
         <div class="row">
-            @foreach($products as $product)
-            <div class="card">
+            @foreach ($products as $product)
+            <div class="product-card">
+                <img src="{{ asset('img/' . $product->image) }}" alt="{{ $product->name }}">
                 <h4>{{ $product->name }}</h4>
-                <a href="#" class="btn">Edit</a>
+                <p>Rp{{ number_format($product->price, 0, ',', '.') }}</p>
+                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-outline-secondary btn-sm me-1">✏ Edit</a>
+                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-outline-danger btn-sm">🗑</button>
+                </form>
             </div>
             @endforeach
         </div>

@@ -56,9 +56,9 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="">Skincare Store</a>
+        <a href="{{ route('landing.page') }}">Lullaskin Store</a>
         <div>
-        <a href="{{ route("home") }}">Home</a>
+        <a href="{{ route("landing.page") }}">Home</a>
             <a href="{{ route("skincare") }}">Produk</a>
             <a href="{{ route("about.us") }}">Tentang Kami</a>
             <a href="{{ route("ingredients") }}">Kandungan Skincare</a>

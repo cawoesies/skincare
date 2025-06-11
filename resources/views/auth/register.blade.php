@@ -54,6 +54,22 @@
 <body>
     <div class="register-container">
         <h2>Daftar Lullaskin</h2>
+
+        @if ($errors->any())
+        <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+            @foreach ($errors->all() as $error)
+                <p style="margin: 0;">{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+
+    <!-- Tampilkan success message jika ada -->
+    @if (session('success'))
+        <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+            {{ session('success') }}
+        </div>
+    @endif
+    
         <form method="POST" action="{{ route('register.process') }}">
         @csrf
             <input type="text" name="name" placeholder="Nama Lengkap" required><br>

@@ -81,6 +81,17 @@
     </style>
 </head>
 <body>
+
+    <nav class="navbar">
+        <a href="{{ route('landing.page') }}">Lullaskin Store</a>
+        <div>
+            <a href="{{ route("admin") }}">Home</a>
+            <a href="{{ route("produk") }}">Produk</a>
+            <a href="{{ route("about.us") }}">Data User</a>
+            <a href="{{ route("ingredients") }}">Data Pesan</a>
+        </div>
+    </nav>
+
     <div class="container">
         <a href="{{ route('produk') }}" class="back-link">← Kembali ke Daftar Produk</a>
         <h2>Edit Produk Skincare</h2>
@@ -94,6 +105,9 @@
 
             <label for="price">Harga</label>
             <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" required>
+
+            <label for="description">Deskripsi</label>
+            <textarea id="description" name="description" rows="4">{{ old('description', $product->description) }}</textarea>
 
             <label for="image">Gambar Produk</label>
             @if ($product->image)

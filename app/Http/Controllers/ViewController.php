@@ -19,6 +19,12 @@ class ViewController extends Controller
         return view('skincare.admin');
     }
 
+    public function produk()
+    {
+    $products = Product::all(); // Ambil semua produk dari database
+    return view('auth.produk', compact('products')); // Kirim ke view
+    }
+
     public function skincare()
     {
         $products = Product::all();

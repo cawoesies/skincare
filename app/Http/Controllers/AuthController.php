@@ -15,27 +15,27 @@ class AuthController extends Controller
     }
 
     public function register(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|string|confirmed|min:6',
-    ]);
-
-    try {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => 'user',
-            'password' => Hash::make($request->password),
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|confirmed|min:6',
         ]);
+
+        try {
+            $user = new User;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->role = 'user'; // default user
+            $user->password = Hash::make($request->password);
+            $user->save();
         } catch (\Exception $e) {
-            return back()->withErrors(['msg' => 'Gagal daftar: '.$e->getMessage()])->withInput();
+            return back()->withErrors(['msg' => 'Gagal daftar: ' . $e->getMessage()])->withInput();
         }
 
         Auth::login($user);
-            return redirect()->route('home');
-        }
+        return redirect()->route('home');
+    }
 
     public function showLoginForm()
     {
@@ -47,11 +47,24 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->route('home');
+            $user = Auth::user();
+
+            // Arahkan berdasarkan role
+            if ($user->role === 'admin') {
+                return redirect()->route('admin');
+            } else {
+                return redirect()->route('home');
+            }
         }
 
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ])->withInput();
+    }
+
+    // Tambahkan method ini agar /admin bisa diakses
+    public function admin()
+    {
+        return view('auth.admin');
     }
 }

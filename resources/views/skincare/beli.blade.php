@@ -209,6 +209,25 @@
             color: white;
         }
 
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
         @media (max-width: 768px) {
             .product-section {
                 grid-template-columns: 1fr;
@@ -234,99 +253,135 @@
             <h1 class="page-title">Beli Produk Skincare</h1>
             <p class="page-subtitle">Lengkapi data pembelian Anda untuk mendapatkan produk skincare terbaik</p>
 
+            <!-- Alert untuk notifikasi -->
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert alert-error">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="product-section">
                 <div class="product-image">
                     <img src="{{ asset('img/' . $product->image) }}" alt="{{ $product->name }}">
-
                 </div>
                 <div class="product-details">
                     <h2>{{ $product->name }}</h2>
                     <div class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                    @if(isset($product->description))
+                        <div class="product-description">{{ $product->description }}</div>
+                    @endif
                 </div>
             </div>
 
-            <form class="purchase-form">
+            <!-- Form dengan method POST dan route yang benar -->
+            <form class="purchase-form" method="POST" action="{{ route('pesan.store') }}">
+                @csrf
+                
+                <!-- Hidden input untuk product_id -->
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                
+                <!-- Hidden inputs untuk total dan ongkir yang akan diupdate via JavaScript -->
+                <input type="hidden" name="total" id="totalInput" value="">
+                <input type="hidden" name="ongkir" id="ongkirInput" value="">
+
                 <div class="form-group">
                     <label for="nama">Nama Lengkap *</label>
-                    <input type="text" id="nama" name="nama" required>
+                    <input type="text" id="nama" name="nama" value="{{ old('nama') }}" required>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required>
                 </div>
 
                 <div class="form-group">
                     <label for="telepon">Nomor Telepon *</label>
-                    <input type="tel" id="telepon" name="telepon" required>
+                    <input type="tel" id="telepon" name="telepon" value="{{ old('telepon') }}" required>
                 </div>
 
                 <div class="quantity-section">
                     <div class="form-group">
                         <label for="jumlah">Jumlah</label>
                         <select id="jumlah" name="jumlah" onchange="updateTotal()">
-                            <option value="1">1 Botol</option>
-                            <option value="2">2 Botol</option>
-                            <option value="3">3 Botol</option>
-                            <option value="4">4 Botol</option>
-                            <option value="5">5 Botol</option>
+                            <option value="1" {{ old('jumlah') == '1' ? 'selected' : '' }}>1 Botol</option>
+                            <option value="2" {{ old('jumlah') == '2' ? 'selected' : '' }}>2 Botol</option>
+                            <option value="3" {{ old('jumlah') == '3' ? 'selected' : '' }}>3 Botol</option>
+                            <option value="4" {{ old('jumlah') == '4' ? 'selected' : '' }}>4 Botol</option>
+                            <option value="5" {{ old('jumlah') == '5' ? 'selected' : '' }}>5 Botol</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="pengiriman">Metode Pengiriman</label>
-                        <select id="pengiriman" name="pengiriman" onchange="updateTotal()">
-                            <option value="15000">Regular (3-5 hari) - Rp 15.000</option>
-                            <option value="25000">Express (1-2 hari) - Rp 25.000</option>
-                            <option value="35000">Same Day - Rp 35.000</option>
+                        <label for="metode_pengiriman">Metode Pengiriman</label>
+                        <select id="metode_pengiriman" name="metode_pengiriman" onchange="updateTotal()">
+                            <option value="Regular" data-cost="15000" {{ old('metode_pengiriman') == 'Regular' ? 'selected' : '' }}>Regular (3-5 hari) - Rp 15.000</option>
+                            <option value="Express" data-cost="25000" {{ old('metode_pengiriman') == 'Express' ? 'selected' : '' }}>Express (1-2 hari) - Rp 25.000</option>
+                            <option value="Same Day" data-cost="35000" {{ old('metode_pengiriman') == 'Same Day' ? 'selected' : '' }}>Same Day - Rp 35.000</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="alamat">Alamat Lengkap *</label>
-                    <textarea id="alamat" name="alamat" rows="4" placeholder="Masukkan alamat lengkap untuk pengiriman" required></textarea>
+                    <textarea id="alamat" name="alamat" rows="4" placeholder="Masukkan alamat lengkap untuk pengiriman" required>{{ old('alamat') }}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="pembayaran">Metode Pembayaran</label>
-                    <select id="pembayaran" name="pembayaran">
-                        <option value="transfer">Transfer Bank</option>
-                        <option value="ewallet">E-Wallet (OVO, GoPay, DANA)</option>
-                        <option value="cod">Cash on Delivery (COD)</option>
-                        <option value="kartu">Kartu Kredit/Debit</option>
+                    <label for="metode_pembayaran">Metode Pembayaran</label>
+                    <select id="metode_pembayaran" name="metode_pembayaran">
+                        <option value="Transfer Bank" {{ old('metode_pembayaran') == 'Transfer Bank' ? 'selected' : '' }}>Transfer Bank</option>
+                        <option value="E-Wallet" {{ old('metode_pembayaran') == 'E-Wallet' ? 'selected' : '' }}>E-Wallet (OVO, GoPay, DANA)</option>
+                        <option value="COD" {{ old('metode_pembayaran') == 'COD' ? 'selected' : '' }}>Cash on Delivery (COD)</option>
+                        <option value="Kartu Kredit" {{ old('metode_pembayaran') == 'Kartu Kredit' ? 'selected' : '' }}>Kartu Kredit/Debit</option>
                     </select>
                 </div>
 
                 <div class="total-section">
                     <div>Total Pembayaran:</div>
-                    <div class="total-price" id="totalPrice">Rp 165.000</div>
+                    <div class="total-price" id="totalPrice">Rp 0</div>
                 </div>
 
                 <button type="submit" class="btn-primary">Beli Sekarang</button>
-                <button type="button" class="btn-secondary" onclick="history.back()">Kembali ke Produk</button>
+                <a href="{{ route('skincare') }}" class="btn-secondary" style="display: inline-block; text-align: center; text-decoration: none;">Kembali ke Produk</a>
+
             </form>
         </div>
     </div>
 
     <script>
-    function updateTotal() {
-        const quantity = parseInt(document.getElementById('jumlah').value);
-        const shipping = parseInt(document.getElementById('pengiriman').value);
-        const productPrice =  $product-price ;
+        // Ambil harga produk dari PHP
+        const productPrice = {{ $product->price }};
         
-        const total = (productPrice * quantity) + shipping;
-        
-        // Update teks total di halaman
-        document.getElementById('totalPrice').textContent = 
-            'Rp ' + total.toLocaleString('id-ID');
+        function updateTotal() {
+            const quantity = parseInt(document.getElementById('jumlah').value);
+            const shippingSelect = document.getElementById('metode_pengiriman');
+            const selectedOption = shippingSelect.options[shippingSelect.selectedIndex];
+            const shipping = parseInt(selectedOption.getAttribute('data-cost'));
+            
+            const total = (productPrice * quantity) + shipping;
+            
+            // Update tampilan total di halaman
+            document.getElementById('totalPrice').textContent = 
+                'Rp ' + total.toLocaleString('id-ID');
 
-        // Update hidden input value
-        document.getElementById('totalInput').value = total;
-        document.getElementById('ongkirInput').value = shipping;
-    }
+            // Update hidden input values untuk dikirim ke server
+            document.getElementById('totalInput').value = total;
+            document.getElementById('ongkirInput').value = shipping;
+        }
 
-    updateTotal();
-</script>
-
+        // Jalankan updateTotal saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTotal();
+        });
+    </script>
 </body>
 </html>

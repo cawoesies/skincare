@@ -64,10 +64,11 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="#">Lullaskin Store</a>
+        <a href="{{ route('landing.page') }}">Lullaskin Store</a>
         <div>
             <a href="{{ route("admin") }}">Home</a>
             <a href="{{ route("produk") }}">Produk</a>
+            <a href="{{ route("index") }}">Data Pesan</a>
         </div>
     </nav>
     

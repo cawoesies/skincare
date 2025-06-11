@@ -54,6 +54,7 @@
             font-size: 18px;
             border-radius: 8px;
             margin-top: 15px;
+            text-decoration: none;
         }
         .hero img {
             width: 300px;
@@ -64,7 +65,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="#">Lullaskin Store</a>
+        <a href="{{ route('landing.page') }}">Lullaskin Store</a>
         <div>
             <a href="{{ route("home") }}">Home</a>
             <a href="{{ route("skincare") }}">Produk</a>
@@ -76,7 +77,7 @@
     <section class="hero">
         <h2>Selamat Datang di Lullaskin Store</h2>
         <p>Perawatan kulit terbaik untuk semua jenis kulit, memberikan kelembapan dan perlindungan maksimal.</p>
-        <a href="#" class="btn">Jelajahi Produk</a>
+        <a href="{{ route('skincare') }}" class="btn">Jelajahi Produk</a>
     </section>
 </body>
 </html>
