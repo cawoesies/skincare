@@ -1,14 +1,19 @@
 <?php
 
-use App\Http\Controllers\Api\ApiProdukController;
+use App\Http\Controllers\Api\ProdukController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ProductController;
 
-//Semua API resep tidak pakai auth dulu, agar mudah diakses di Postman
-Route::get('/products', [ProdukController::class, 'index']); 
-//Route::get('/products/{id}', [ProductController::class, 'show']);
-//Route::post('/product', [ProductController::class, 'store']);
-//Route::put('/products/{id}', [ProductController::class, 'update']); 
-//Route::delete('/products/{id}', [ProductController::class, 'destroy']);
-//Route::get('/products', [ProductController::class, 'index']);
+// Semua API produk tidak pakai auth dulu, agar mudah diakses di Postman
+Route::get('/produk', [ApiProdukController::class, 'index']); 
+//Route::get('/produk/{id}', [ProdukController::class, 'show']);
+//Route::post('/produk', [ProdukController::class, 'store']);
+//Route::put('/produk/{id}', [ProdukController::class, 'update']); 
+//Route::delete('/produk/{id}', [ProdukController::class, 'destroy']);
+//Route::get('/produk', [ProdukController::class, 'index']); 
+
+Route::get('/produk', [ProdukController::class, 'index']); 
+Route::post('/produk', [ProdukController::class, 'store']); 
+Route::get('/produk/{id}', [ProdukController::class, 'show']); 
+Route::put('/produk/{id}', [ProdukController::class, 'update']); 
+Route::delete('/produk/{id}', [ProdukController::class, 'destroy']);
